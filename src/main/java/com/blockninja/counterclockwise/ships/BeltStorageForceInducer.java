@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.simibubi.create.content.kinetics.belt.BeltPart;
 import com.simibubi.create.content.kinetics.belt.BeltSlope;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -41,5 +42,5 @@ public final class BeltStorageForceInducer implements ShipPhysicsListener {
         return ship != null ? getOrCreate(ship) : null;
     }
 
-    public record BeltData(BeltSlope slop, BeltPart part, float speed) {}
+    public record BeltData(BeltSlope slop, BeltPart part, float speed, Direction direction) {}
 }

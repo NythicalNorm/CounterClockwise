@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.joml.Vector3d;
 import org.joml.Vector3dc;
+import org.joml.Vector3f;
 import org.valkyrienskies.core.api.event.RegisteredListener;
 import org.valkyrienskies.core.api.events.CollisionEvent;
 import org.valkyrienskies.core.api.physics.ContactPoint;
@@ -76,9 +77,10 @@ public class VSEvents {
                     forcePos.add(0.5, 0.5, 0.5)
                             .sub(mainShip.getTransform().getPositionInShip());
 
-                    pair.getSecond().speed()
+                    Vector3f forceDir = pair.getSecond().direction().step();
+                    mainShip.getTransform().getShipToWorld().transformDirection(forceDir);
 
-                    mainShip.applyInvariantForceToPos(, 0), forcePos);
+                    mainShip.applyInvariantForceToPos(new Vector3d(forceDir).mul(mainShip.getMass()).mul(Math.abs(pair.getSecond().speed())*48), forcePos);
                 }
             }
         }

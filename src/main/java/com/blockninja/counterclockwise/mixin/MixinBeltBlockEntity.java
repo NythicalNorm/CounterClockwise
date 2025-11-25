@@ -5,6 +5,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.kinetics.belt.BeltBlock;
 import com.simibubi.create.content.kinetics.belt.BeltBlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -23,6 +24,12 @@ public abstract class MixinBeltBlockEntity extends BlockEntity {
     @Shadow
     public abstract float getBeltMovementSpeed();
 
+    @Shadow
+    public abstract float getDirectionAwareBeltMovementSpeed();
+
+    @Shadow
+    public abstract Direction getMovementFacing();
+
     public MixinBeltBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
     }
@@ -36,6 +43,8 @@ public abstract class MixinBeltBlockEntity extends BlockEntity {
         if (!AllBlocks.BELT.has(level.getBlockState(worldPosition)))
             return;
 
+        //System.out.println(getDirectionAwareBeltMovementSpeed());
+
         if (level instanceof ServerLevel serverLevel) {
             LoadedServerShip ship = VSGameUtilsKt.getShipObjectManagingPos(serverLevel, worldPosition);
             if (ship == null) return;
@@ -44,7 +53,8 @@ public abstract class MixinBeltBlockEntity extends BlockEntity {
             inducer.beltLocations.put(worldPosition.asLong(), new BeltStorageForceInducer.BeltData(
                     getBlockState().getValue(BeltBlock.SLOPE),
                     getBlockState().getValue(BeltBlock.PART),
-                    getBeltMovementSpeed()
+                    getBeltMovementSpeed(),
+                    getMovementFacing()
             ));
         }
 
