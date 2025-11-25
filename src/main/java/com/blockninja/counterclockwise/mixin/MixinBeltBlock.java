@@ -25,7 +25,7 @@ public class MixinBeltBlock {
             LoadedServerShip ship = VSGameUtilsKt.getShipObjectManagingPos(serverLevel, pos);
             if (ship == null) return;
             BeltStorageForceInducer inducer = BeltStorageForceInducer.getOrCreate(ship);
-            inducer.beltLocations.remove(pos);
+            inducer.beltLocations.remove(pos.asLong());
         }
     }
 }

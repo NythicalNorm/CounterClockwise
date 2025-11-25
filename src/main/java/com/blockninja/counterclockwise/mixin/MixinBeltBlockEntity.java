@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -18,6 +19,9 @@ import org.valkyrienskies.mod.common.VSGameUtilsKt;
 
 @Mixin(BeltBlockEntity.class)
 public abstract class MixinBeltBlockEntity extends BlockEntity {
+
+    @Shadow
+    public abstract float getBeltMovementSpeed();
 
     public MixinBeltBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
@@ -37,7 +41,11 @@ public abstract class MixinBeltBlockEntity extends BlockEntity {
             if (ship == null) return;
 
             BeltStorageForceInducer inducer = BeltStorageForceInducer.getOrCreate(ship);
-            inducer.beltLocations.put(worldPosition, getBlockState().getValue(BeltBlock.SLOPE));
+            inducer.beltLocations.put(worldPosition.asLong(), new BeltStorageForceInducer.BeltData(
+                    getBlockState().getValue(BeltBlock.SLOPE),
+                    getBlockState().getValue(BeltBlock.PART),
+                    getBeltMovementSpeed()
+            ));
         }
 
     }

@@ -1,6 +1,9 @@
 package com.blockninja.counterclockwise.ships;
 
+import com.blockninja.counterclockwise.jackson.BlockPosKeySerializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.simibubi.create.content.kinetics.belt.BeltPart;
 import com.simibubi.create.content.kinetics.belt.BeltSlope;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -14,8 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public final class BeltStorageForceInducer implements ShipPhysicsListener {
 
-    @JsonIgnore
-    public ConcurrentHashMap<BlockPos, BeltSlope> beltLocations = new ConcurrentHashMap<>();
+    public ConcurrentHashMap<Long, BeltData> beltLocations = new ConcurrentHashMap<>();
 
     @Override
     public void physTick(@NotNull PhysShip physShip, @NotNull PhysLevel physLevel) {
@@ -38,4 +40,6 @@ public final class BeltStorageForceInducer implements ShipPhysicsListener {
 
         return ship != null ? getOrCreate(ship) : null;
     }
+
+    public record BeltData(BeltSlope slop, BeltPart part, float speed) {}
 }
