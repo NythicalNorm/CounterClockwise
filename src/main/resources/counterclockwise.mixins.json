@@ -5,6 +5,8 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "counterclockwise.refmap.json",
   "mixins": [
+    "MixinBeltBlock",
+    "MixinBeltBlockEntity"
   ],
   "client": [
   ],

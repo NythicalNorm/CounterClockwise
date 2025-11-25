@@ -1,14 +1,11 @@
 package com.blockninja.counterclockwise;
 
 import com.blockninja.counterclockwise.ships.BeltStorageForceInducer;
-import net.minecraftforge.event.server.ServerLifecycleEvent;
 import net.minecraftforge.server.ServerLifecycleHooks;
-import org.joml.Vector3d;
 import org.valkyrienskies.core.api.event.RegisteredListener;
 import org.valkyrienskies.core.api.events.CollisionEvent;
 import org.valkyrienskies.core.api.ships.LoadedServerShip;
 import org.valkyrienskies.core.api.ships.PhysShip;
-import org.valkyrienskies.core.impl.game.ships.PhysShipImpl;
 import org.valkyrienskies.mod.common.VSGameUtilsKt;
 import net.minecraft.server.MinecraftServer;
 
@@ -42,8 +39,13 @@ public class VSEvents {
         if (serverShip != null) {
             BeltStorageForceInducer inducer = serverShip.getAttachment(BeltStorageForceInducer.class);
             if (inducer != null) {
-                System.out.println(inducer.map);
+                System.out.println(inducer.beltLocations);
             }
         }
+
+        // check if belt
+        //if (!AllBlocks.BELT.has(level.getBlockState(worldPosition)))
+        //    return;
+
     }
 }
