@@ -12,5 +12,6 @@ A new VSxCreate addon that extends VS functionality to base Create!
 - [ ] Water Wheels propel Ships
   - [ ] Water-based Propulsion (Steamboat)
   - [ ] Land-based (Wheels)
+- [ ] Cogs as Wheels
 - [ ] Pump-based Propulsion
   - Pumps underwater propel Ships
