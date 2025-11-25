@@ -13,5 +13,6 @@ A new VSxCreate addon that extends VS functionality to base Create!
   - [ ] Water-based Propulsion (Steamboat)
   - [ ] Land-based (Wheels)
 - [ ] Cogs as Wheels
+- [ ] Fly***wheels***
 - [ ] Pump-based Propulsion
   - Pumps underwater propel Ships
