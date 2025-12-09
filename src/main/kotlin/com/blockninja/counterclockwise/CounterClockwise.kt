@@ -13,6 +13,7 @@ import org.valkyrienskies.core.api.util.GameTickOnly
 import org.valkyrienskies.core.api.util.PhysTickOnly
 import org.valkyrienskies.mod.api.events.RegisterBlockStateEvent
 import org.valkyrienskies.mod.api.toJOML
+import org.valkyrienskies.mod.api.vsApi
 import java.util.function.Consumer
 
 @OptIn(PhysTickOnly::class, VsBeta::class, GameTickOnly::class)
@@ -29,23 +30,23 @@ class CounterClockwise {
         mapper.registerModule(module);*/
         // endregion
 
-        ApiGetter.vsApi.collisionPersistEvent.on(EventConsumer { collisionEvent: CollisionEvent, registeredListener: RegisteredListener ->
+        vsApi.collisionPersistEvent.on(EventConsumer { collisionEvent: CollisionEvent, registeredListener: RegisteredListener ->
             VSEvents.collide(
                 collisionEvent,
                 registeredListener
             )
         })
 
-        ApiGetter.vsApi.registerBlockStateEvent.on((Consumer { registerBlockStateEvent: RegisterBlockStateEvent -> }))
+        vsApi.registerBlockStateEvent.on((Consumer { registerBlockStateEvent: RegisterBlockStateEvent -> }))
 
-        val registration = ApiGetter.vsApi
+        val registration = vsApi
             .newAttachmentRegistrationBuilder(BeltStorageForceInducer::class.java)
             .useJacksonSerializer()
             .build()
 
-        ApiGetter.vsApi.registerAttachment<BeltStorageForceInducer>(registration)
+        vsApi.registerAttachment<BeltStorageForceInducer>(registration)
 
-        ApiGetter.vsApi.shipLoadEvent.on(Consumer { event: ShipLoadEvent ->
+        vsApi.shipLoadEvent.on(Consumer { event: ShipLoadEvent ->
             event.ship.setAttachment<BeltStorageForceInducer>(BeltStorageForceInducer())
         })
     }
