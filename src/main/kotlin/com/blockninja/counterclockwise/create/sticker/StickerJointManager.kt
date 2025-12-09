@@ -26,6 +26,7 @@ import org.valkyrienskies.core.api.ships.LoadedShip
 import org.valkyrienskies.core.api.ships.ServerShip
 import org.valkyrienskies.core.api.ships.Ship
 import org.valkyrienskies.core.api.ships.properties.ShipId
+import org.valkyrienskies.core.api.util.GameTickOnly
 import org.valkyrienskies.core.api.util.PhysTickOnly
 import org.valkyrienskies.core.internal.joints.VSFixedJoint
 import org.valkyrienskies.core.internal.joints.VSJointMaxForceTorque
@@ -33,13 +34,16 @@ import org.valkyrienskies.core.internal.joints.VSJointPose
 import org.valkyrienskies.core.internal.world.VsiServerShipWorld
 import org.valkyrienskies.core.util.expand
 import org.valkyrienskies.mod.common.dimensionId
+import org.valkyrienskies.mod.common.getLoadedShipManagingPos
 import org.valkyrienskies.mod.common.getShipManagingPos
+import org.valkyrienskies.mod.common.getShipObjectManagingPos
 import org.valkyrienskies.mod.common.isTickingChunk
 import org.valkyrienskies.mod.common.shipObjectWorld
 import org.valkyrienskies.mod.common.squaredDistanceBetweenInclShips
 import org.valkyrienskies.mod.common.toWorldCoordinates
 import org.valkyrienskies.mod.common.util.DimensionIdProvider
 import org.valkyrienskies.mod.common.util.toJOML
+import org.valkyrienskies.mod.common.util.toMinecraft
 import org.valkyrienskies.mod.util.logger
 import thedarkcolour.kotlinforforge.forge.vectorutil.v3d.toVector3d
 import java.util.function.Consumer
@@ -50,7 +54,7 @@ open class StickerJointManager(val level: ServerLevel, val ship: ServerShip?, va
     open val checkPos: Vector3dc
         get() = this.blockPos.centerJOMLD().add(getFacing().normal.toVector3d().mul(0.5625))
 
-    @OptIn(PhysTickOnly::class)
+    @OptIn(PhysTickOnly::class, GameTickOnly::class)
     open fun createStickerJoint() {
         if (this.bodyId == null) return
         val checkPos = this.level.toWorldCoordinates(Vector3d(this.checkPos))
@@ -58,11 +62,11 @@ open class StickerJointManager(val level: ServerLevel, val ship: ServerShip?, va
         this.level.transformFromWorldToNearbyLoadedShipsAndWorld(AABBd(checkPos, checkPos).expand(0.25)) { aabb ->
             val pos = aabb.center(Vector3d())
 
-            val otherShip = level.getShipManagingPos2(pos)
+            val otherShip = level.getLoadedShipManagingPos(pos)
             val otherId = otherShip?.id ?: level.shipObjectWorld.dimensionToGroundBodyIdImmutable[level.dimensionId] ?: return@transformFromWorldToNearbyLoadedShipsAndWorld
             if (otherId == this.bodyId) return@transformFromWorldToNearbyLoadedShipsAndWorld
 
-            if (isAirOrFluid(level.getBlockState(pos.toBlockPos()))) return@transformFromWorldToNearbyLoadedShipsAndWorld
+            if (isAirOrFluid(level.getBlockState(BlockPos.containing(pos.toMinecraft())))) return@transformFromWorldToNearbyLoadedShipsAndWorld
 
 
             val otherPos = Vector3d(pos)
@@ -89,8 +93,8 @@ open class StickerJointManager(val level: ServerLevel, val ship: ServerShip?, va
             val compliance = 1e-10f//VSAdditionConfig.SERVER.create.stickerCompliance
             val maxForce = 1e10f//VSAdditionConfig.SERVER.create.stickerMaxForce
 
-            val jointPos0 = VSJointPose(localPos0!!, (ship?.transform?.shipToWorldRotation ?: Quaterniond()).invert(Quaterniond()))
-            val jointPos1 = VSJointPose(localPos1!!, (otherShip?.transform?.shipToWorldRotation ?: Quaterniond()).invert(Quaterniond()))
+            val jointPos0 = VSJointPose(localPos0, (ship?.transform?.shipToWorldRotation ?: Quaterniond()).invert(Quaterniond()))
+            val jointPos1 = VSJointPose(localPos1, (otherShip?.transform?.shipToWorldRotation ?: Quaterniond()).invert(Quaterniond()))
             val maxJointForce = VSJointMaxForceTorque(maxForce, maxForce)
 
             val fixedJoint = VSFixedJoint(bodyId!!, jointPos0, otherId, jointPos1, maxJointForce)
@@ -99,7 +103,7 @@ open class StickerJointManager(val level: ServerLevel, val ship: ServerShip?, va
                 StickerJointGroup(
                     listOf(
                         fixedJoint.createJoint().get() ?: return@transformFromWorldToNearbyLoadedShipsAndWorld
-                    ), pos.toBlockPos()
+                    ), BlockPos.containing(pos.toMinecraft())
                 )
             )
             shouldPlaySound = true
@@ -121,7 +125,7 @@ open class StickerJointManager(val level: ServerLevel, val ship: ServerShip?, va
         this.jointGroups.forEach { (id, group) ->
             group as StickerJointGroup
             val blockPos = group.blockPos
-            if (this.level.isTickingChunk(ChunkPos(blockPos)) && isAirOrFluid(this.level.getBlockState(blockPos)) || this.level.squaredDistanceBetweenInclShips(this.blockPos, blockPos) >= 128.0) {
+            if (this.level.isTickingChunk(ChunkPos(blockPos)) && isAirOrFluid(this.level.getBlockState(blockPos)) || this.level.squaredDistanceBetweenInclShips(this.blockPos.center.toJOML(), blockPos.center.toJOML()) >= 128.0) {
                 this.removeJointGroup(id)
             }
         }
@@ -143,29 +147,8 @@ open class StickerJointManager(val level: ServerLevel, val ship: ServerShip?, va
     }
 }
 
-private fun Level.squaredDistanceBetweenInclShips(inputPos1: Any, inputPos2: Any) : Double {
-    val vector1 = toVector3d(inputPos1)
-    val vector2 = toVector3d(inputPos2)
+private fun Level.squaredDistanceBetweenInclShips(vector1: Vector3d, vector2: Vector3d) : Double {
     return this.squaredDistanceBetweenInclShips(vector1.x(),vector1.y(), vector1.z(), vector2.x(), vector2.y(), vector2.z())
-}
-
-private fun toVector3d(inputPos: Any) : Vector3d {
-    return when (inputPos) {
-        is Vec3i -> inputPos.centerJOMLD()
-        is Position -> inputPos.toJOML()
-        is Vector3i -> inputPos.centerJOMLD()
-        is Vector3fc -> Vector3d(inputPos.x().toDouble(), inputPos.y().toDouble(), inputPos.z().toDouble())
-        is Vector3dc -> Vector3d(inputPos)
-        else -> throw IllegalArgumentException("Unsupported type: ${inputPos::class.simpleName}")
-    }
-}
-
-private fun Vec3i.centerJOMLD(): Vector3d {
-    return Vector3d(this.x + 0.5, this.y + 0.5, this.z + 0.5)
-}
-
-private fun Vector3i.centerJOMLD(): Vector3d {
-    return Vector3d(this.x + 0.5, this.y + 0.5, this.z + 0.5)
 }
 
 private fun Level.transformFromWorldToNearbyLoadedShipsAndWorld(aabb: AABBdc, cb: Consumer<AABBdc>) {
@@ -176,15 +159,6 @@ private fun Level.transformFromWorldToNearbyLoadedShipsAndWorld(aabb: AABBdc, cb
     }
 }
 
-private fun Level?.getLoadedShipsIntersecting(aabb: AABBdc): Iterable<LoadedShip> {
-    return this.shipObjectWorld.loadedShips.getIntersecting(aabb).filter { it.chunkClaimDimension == (this as DimensionIdProvider).dimensionId }
-}
-
-private fun Level?.getShipManagingPos2(position: Any) : Ship? {
-    val pos = toVector3d(position)
-    return this.getShipManagingPos(pos)
-}
-
-private fun Vector3dc.toBlockPos(): BlockPos {
-    return BlockPos(Mth.floor(this.x()), Mth.floor(this.y()), Mth.floor(this.z()))
+private fun Level.getLoadedShipsIntersecting(aabb: AABBdc): Iterable<LoadedShip> {
+    return this.shipObjectWorld.loadedShips.getIntersecting(aabb, this.dimensionId)
 }
