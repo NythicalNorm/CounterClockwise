@@ -33,8 +33,11 @@ open class PSIWithShip(open val be: PortableStorageInterfaceBlockEntity) {
     open var latestDistance = 0.0
 
     open fun isConnected(): Boolean {
-        // TODO: Sort ts out
-        return !be.isRemoved && !be.isPowered && (be as IPSIWithShipBehavior).workingMode.get() == IPSIWithShipBehavior.WorkingMode.WITH_SHIP && other != null && !other!!.be.isRemoved && !other!!.be.isPowered && (other!!.be as IPSIWithShipBehavior).workingMode.get() == IPSIWithShipBehavior.WorkingMode.WITH_SHIP
+        val thisEnabled = !be.isRemoved && !be.isPowered && (be as IPSIWithShipBehavior).workingMode.get() == IPSIWithShipBehavior.WorkingMode.WITH_SHIP
+        if (other == null) return false
+        val otherEnabled = !other!!.be.isRemoved && !other!!.be.isPowered && (other!!.be as IPSIWithShipBehavior).workingMode.get() == IPSIWithShipBehavior.WorkingMode.WITH_SHIP
+
+        return thisEnabled && otherEnabled
     }
 
     open fun startTransferringTo(otherController: PSIWithShip) {

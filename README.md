@@ -5,10 +5,11 @@ A new VSxCreate addon that extends VS functionality to base Create!
 - [ ] Belts as Tracks
 - [ ] Turntables turn Ships
 - [ ] Fans push/pull Ships
-- [ ] Portable Interfaces
-  - [ ] Ship -> World
-  - [ ] Ship -> Ship
-  - [ ] World -> Ship
+- [x] Portable Interfaces
+  - [x] Ship -> World
+  - [x] Ship -> Ship
+  - [x] World -> Ship
+- [x] Stickers can constraint (done except particles + sounds)
 - [ ] Water Wheels propel Ships
   - [ ] Water-based Propulsion (Steamboat)
   - [ ] Land-based (Wheels)
