@@ -1,4 +1,4 @@
-package com.blockninja.counterclockwise.mixin;
+package com.blockninja.counterclockwise.mixin.create.belt_tracks;
 
 import com.blockninja.counterclockwise.ships.BeltStorageForceInducer;
 import com.simibubi.create.AllBlocks;

@@ -5,8 +5,12 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "counterclockwise.refmap.json",
   "mixins": [
-    "MixinBeltBlock",
-    "MixinBeltBlockEntity"
+    "create.belt_tracks.MixinBeltBlock",
+    "create.belt_tracks.MixinBeltBlockEntity",
+    "create.psi.MixinPortableFluidInterfaceBlockEntity",
+    "create.psi.MixinPortableItemInterfaceBlockEntity",
+    "create.psi.MixinPortableStorageInterfaceBlockEntity",
+    "create.psi.MixinPortableStorageInterfaceMovement"
   ],
   "client": [
   ],
