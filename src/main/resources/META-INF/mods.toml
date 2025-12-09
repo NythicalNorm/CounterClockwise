@@ -1,5 +1,5 @@
-modLoader = "javafml"
-loaderVersion = "[47,)"
+modLoader = "kotlinforforge"
+loaderVersion = "[1,)"
 issueTrackerURL = "${issue_tracker}"
 license = "${mod_license}"
 

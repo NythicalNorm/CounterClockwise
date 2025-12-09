@@ -52,6 +52,12 @@ java {
     toolchain.languageVersion = JavaLanguageVersion.of(17)
 }
 
+kotlin {
+    compilerOptions {
+        optIn.add("org.valkyrienskies.core.api.VsBeta")
+    }
+}
+
 minecraft {
 
     mappings channel: 'parchment', version: '2023.09.03-1.20.1'
@@ -230,3 +236,4 @@ tasks.named('jar', Jar).configure {
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }
+
