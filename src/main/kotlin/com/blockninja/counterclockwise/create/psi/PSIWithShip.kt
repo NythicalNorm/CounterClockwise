@@ -17,7 +17,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
 import org.valkyrienskies.core.api.ships.ClientShip
 import org.valkyrienskies.core.api.util.GameTickOnly
 import org.valkyrienskies.core.util.toAABBi
-import org.valkyrienskies.mod.api.toJOML
 import org.valkyrienskies.mod.common.getShipManagingPos
 import org.valkyrienskies.mod.common.getShipsIntersecting
 import org.valkyrienskies.mod.common.transformAabbToWorld
@@ -35,7 +34,7 @@ open class PSIWithShip(open val be: PortableStorageInterfaceBlockEntity) {
 
     open fun isConnected(): Boolean {
         // TODO: Sort ts out
-        return !be.isRemoved && !be.isPowered && (be as IPSIWithShipBehavior).workingMode.get() == IPSIWithShipBehavior.WorkigMode.WITH_SHIP && other != null && !other!!.be.isRemoved && !other!!.be.isPowered && (other!!.be as IPSIWithShipBehavior).workingMode.get() == IPSIWithShipBehavior.WorkigMode.WITH_SHIP
+        return !be.isRemoved && !be.isPowered && (be as IPSIWithShipBehavior).workingMode.get() == IPSIWithShipBehavior.WorkingMode.WITH_SHIP && other != null && !other!!.be.isRemoved && !other!!.be.isPowered && (other!!.be as IPSIWithShipBehavior).workingMode.get() == IPSIWithShipBehavior.WorkingMode.WITH_SHIP
     }
 
     open fun startTransferringTo(otherController: PSIWithShip) {
@@ -69,7 +68,7 @@ open class PSIWithShip(open val be: PortableStorageInterfaceBlockEntity) {
 
     open fun tick(ci: CallbackInfo) {
         val be = this.be
-        if ((be as IPSIWithShipBehavior).workingMode.get() == IPSIWithShipBehavior.WorkigMode.WITH_SHIP) {
+        if ((be as IPSIWithShipBehavior).workingMode.get() == IPSIWithShipBehavior.WorkingMode.WITH_SHIP) {
             val wasConnected = isConnected()
             if (!isPassive) {
                 if (!be.isPowered && this.other == null) {
@@ -154,7 +153,7 @@ open class PSIWithShip(open val be: PortableStorageInterfaceBlockEntity) {
                     for (z in aabbi.minZ .. aabbi.maxZ) {
                         mutableBlockPos.set(x, y, z)
                         val entity = level.getBlockEntity(mutableBlockPos)
-                        if (entity is PortableStorageInterfaceBlockEntity && !entity.isPowered && entity is IPSIWithShipBehavior && entity.workingMode.get() == IPSIWithShipBehavior.WorkigMode.WITH_SHIP && entity.controller != null && entity.controller::class == this::class) {
+                        if (entity is PortableStorageInterfaceBlockEntity && !entity.isPowered && entity is IPSIWithShipBehavior && entity.workingMode.get() == IPSIWithShipBehavior.WorkingMode.WITH_SHIP && entity.controller != null && entity.controller::class == this::class) {
                             startTransferringTo(entity.controller)
                             return true
                         }

@@ -58,7 +58,7 @@ public abstract class MixinPortableItemInterfaceBlockEntity extends PortableStor
             remap = false
     )
     private <X> LazyOptional<X> modify(LazyOptional<X> original) {
-        if (this instanceof IPSIWithShipBehavior behavior && behavior.getWorkingMode().get() == IPSIWithShipBehavior.WorkigMode.WITH_SHIP && behavior.getController() instanceof PortableItemInterfaceWithShipController controller) {
+        if (this instanceof IPSIWithShipBehavior behavior && behavior.getWorkingMode().get() == IPSIWithShipBehavior.WorkingMode.WITH_SHIP && behavior.getController() instanceof PortableItemInterfaceWithShipController controller) {
             final LazyOptional<IItemHandlerModifiable> capability = controller.getCapability();
             if (capability != null) {
                 return capability.cast();

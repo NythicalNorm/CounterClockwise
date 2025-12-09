@@ -13,9 +13,9 @@ public interface IPSIWithShipBehavior {
 
     PSIWithShip getController();
 
-    ScrollOptionBehaviour<WorkigMode> getWorkingMode();
+    ScrollOptionBehaviour<WorkingMode> getWorkingMode();
 
-    enum WorkigMode implements INamedIconOptions {
+    enum WorkingMode implements INamedIconOptions {
 
         ORIGINAL(AllIcons.I_MOVE_PLACE_RETURNED),
         WITH_SHIP(AllIcons.I_MOVE_PLACE),
@@ -25,7 +25,7 @@ public interface IPSIWithShipBehavior {
         private String translationKey;
         private AllIcons icon;
 
-        private WorkigMode(AllIcons icon) {
+        private WorkingMode(AllIcons icon) {
             this.icon = icon;
             translationKey = CounterClockwise.MOD_ID + ".working_mode." + Lang.asId(name());
         }

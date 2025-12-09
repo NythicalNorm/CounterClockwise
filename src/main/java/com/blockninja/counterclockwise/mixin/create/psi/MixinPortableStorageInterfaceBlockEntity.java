@@ -74,7 +74,7 @@ public abstract class MixinPortableStorageInterfaceBlockEntity implements IPSIWi
             remap = false
     )
     private float replace(float partialTicks, Operation<Float> original) {
-        if (this.getWorkingMode().get() == WorkigMode.WITH_SHIP) {
+        if (this.getWorkingMode().get() == WorkingMode.WITH_SHIP) {
             final PSIWithShip controller = this.getController();
             if (controller != null) {
                 return controller.getExtensionDistance(partialTicks);
@@ -84,7 +84,7 @@ public abstract class MixinPortableStorageInterfaceBlockEntity implements IPSIWi
     }
 
     @Unique
-    private ScrollOptionBehaviour<WorkigMode> vs_addition$workingMode;
+    private ScrollOptionBehaviour<WorkingMode> vs_addition$workingMode;
 
     @Inject(
             method = "addBehaviours",
@@ -92,7 +92,7 @@ public abstract class MixinPortableStorageInterfaceBlockEntity implements IPSIWi
             remap = false
     )
     public void behaviour(List<BlockEntityBehaviour> behaviours, CallbackInfo ci) {
-        this.vs_addition$workingMode = new ScrollOptionBehaviour<>(IPSIWithShipBehavior.WorkigMode.class, CreateLang.translateDirect("vs_addition.working_mode"), (PortableStorageInterfaceBlockEntity)(Object) this, vs_addition$getMovementModeSlot());
+        this.vs_addition$workingMode = new ScrollOptionBehaviour<>(WorkingMode.class, CreateLang.translateDirect("vs_addition.working_mode"), (PortableStorageInterfaceBlockEntity)(Object) this, vs_addition$getMovementModeSlot());
         behaviours.add(this.vs_addition$workingMode);
     }
 
@@ -107,7 +107,7 @@ public abstract class MixinPortableStorageInterfaceBlockEntity implements IPSIWi
     }
 
     @Override
-    public ScrollOptionBehaviour<IPSIWithShipBehavior.WorkigMode> getWorkingMode() {
+    public ScrollOptionBehaviour<WorkingMode> getWorkingMode() {
         return vs_addition$workingMode;
     }
 

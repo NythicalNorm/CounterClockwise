@@ -22,7 +22,7 @@ public abstract class MixinPortableStorageInterfaceMovement implements MovementB
             )
     )
     public boolean findStationaryInterface(PortableStorageInterfaceBlockEntity instance, Operation<Boolean> original, @Local(ordinal = 0, argsOnly = true) MovementContext context) {
-        if (instance instanceof IPSIWithShipBehavior behavior && behavior.getWorkingMode().get() == IPSIWithShipBehavior.WorkigMode.WITH_SHIP) {
+        if (instance instanceof IPSIWithShipBehavior behavior && behavior.getWorkingMode().get() == IPSIWithShipBehavior.WorkingMode.WITH_SHIP) {
             return false;
         } else {
             return original.call(instance);
