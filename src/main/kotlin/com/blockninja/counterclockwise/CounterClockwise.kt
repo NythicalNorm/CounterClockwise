@@ -1,6 +1,7 @@
 package com.blockninja.counterclockwise
 
 import com.blockninja.counterclockwise.ships.BeltStorageForceInducer
+import com.blockninja.counterclockwise.ships.FanForceInducer
 import net.minecraft.core.BlockPos
 import net.minecraftforge.fml.common.Mod
 import org.joml.Vector3d
@@ -40,12 +41,20 @@ class CounterClockwise {
         // Waiting on https://github.com/ValkyrienSkies/Valkyrien-Skies-2/pull/1453 to finish
         vsApi.registerBlockStateEvent.on((Consumer { registerBlockStateEvent: RegisterBlockStateEvent -> }))
 
-        val registration = vsApi
-            .newAttachmentRegistrationBuilder(BeltStorageForceInducer::class.java)
-            .useJacksonSerializer()
-            .build()
 
-        vsApi.registerAttachment<BeltStorageForceInducer>(registration)
+        vsApi.registerAttachment<BeltStorageForceInducer>(
+            vsApi
+                .newAttachmentRegistrationBuilder(BeltStorageForceInducer::class.java)
+                .useJacksonSerializer()
+                .build()
+            )
+
+        vsApi.registerAttachment<FanForceInducer>(
+            vsApi
+                .newAttachmentRegistrationBuilder(FanForceInducer::class.java)
+                .useJacksonSerializer()
+                .build()
+        )
 
         vsApi.shipLoadEvent.on(Consumer { event: ShipLoadEvent ->
             event.ship.setAttachment<BeltStorageForceInducer>(BeltStorageForceInducer())

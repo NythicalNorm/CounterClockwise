@@ -46,7 +46,7 @@ public abstract class MixinBeltBlockEntity extends BlockEntity {
         //System.out.println(getDirectionAwareBeltMovementSpeed());
 
         if (level instanceof ServerLevel serverLevel) {
-            LoadedServerShip ship = VSGameUtilsKt.getShipObjectManagingPos(serverLevel, worldPosition);
+            LoadedServerShip ship = VSGameUtilsKt.getLoadedShipManagingPos(serverLevel, worldPosition);
             if (ship == null) return;
 
             BeltStorageForceInducer inducer = BeltStorageForceInducer.getOrCreate(ship);

@@ -22,7 +22,7 @@ public class MixinBeltBlock {
     )
     private void injectOnRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving, CallbackInfo ci) {
         if (world instanceof ServerLevel serverLevel) {
-            LoadedServerShip ship = VSGameUtilsKt.getShipObjectManagingPos(serverLevel, pos);
+            LoadedServerShip ship = VSGameUtilsKt.getLoadedShipManagingPos(serverLevel, pos);
             if (ship == null) return;
             BeltStorageForceInducer inducer = BeltStorageForceInducer.getOrCreate(ship);
             inducer.beltLocations.remove(pos.asLong());
