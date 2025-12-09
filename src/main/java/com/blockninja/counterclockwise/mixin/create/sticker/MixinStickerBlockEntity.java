@@ -1,6 +1,6 @@
 package com.blockninja.counterclockwise.mixin.create.sticker;
 
-import com.blockninja.counterclockwise.create.sticker.StickerConstraintManager;
+import com.blockninja.counterclockwise.create.sticker.StickerJointManager;
 import com.simibubi.create.content.contraptions.chassis.StickerBlockEntity;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import net.minecraft.core.BlockPos;
@@ -32,7 +32,7 @@ public abstract class MixinStickerBlockEntity extends SmartBlockEntity {
     private boolean wasBlockStateExtended = false;
 
     @Unique
-    private StickerConstraintManager manager = null;
+    private StickerJointManager manager = null;
 
     public MixinStickerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -50,11 +50,11 @@ public abstract class MixinStickerBlockEntity extends SmartBlockEntity {
         if (this.level == null || this.level.isClientSide()) return;
 
         boolean isExtended = this.isBlockStateExtended();
-        StickerConstraintManager manager = this.getManager();
+        StickerJointManager manager = this.getManager();
 
         if (manager != null) {
             if (isExtended) {
-                manager.checkStickerConstraint();
+                manager.checkStickerJoint();
             }
 
             if (isExtended != this.wasBlockStateExtended) {
@@ -64,9 +64,9 @@ public abstract class MixinStickerBlockEntity extends SmartBlockEntity {
 
             if (this.needUpdate) {
                 if (isExtended) {
-                    manager.createStickerConstraint();
+                    manager.createStickerJoint();
                 } else {
-                    manager.removeAllConstraintGroups();
+                    manager.removeAllJointGroups();
                 }
                 this.needUpdate = false;
             }
@@ -78,7 +78,7 @@ public abstract class MixinStickerBlockEntity extends SmartBlockEntity {
             at = @At("TAIL")
     )
     private void write(CompoundTag tag, boolean clientPacket, CallbackInfo ci) {
-        StickerConstraintManager manager = getManager();
+        StickerJointManager manager = getManager();
         if (manager != null) {
             manager.writeCompoundTag(tag);
         }
@@ -89,7 +89,7 @@ public abstract class MixinStickerBlockEntity extends SmartBlockEntity {
             at = @At("TAIL")
     )
     private void read(CompoundTag tag, boolean clientPacket, CallbackInfo ci) {
-        StickerConstraintManager manager = getManager();
+        StickerJointManager manager = getManager();
         if (manager != null) {
             manager.readCompoundTag(tag);
         }
@@ -97,19 +97,19 @@ public abstract class MixinStickerBlockEntity extends SmartBlockEntity {
 
     @Override
     public void remove() {
-        final StickerConstraintManager manager = getManager();
+        final StickerJointManager manager = getManager();
         if (manager != null) {
-            manager.removeAllConstraintGroups();
+            manager.removeAllJointGroups();
         }
         super.remove();
     }
 
     @Unique
-    private StickerConstraintManager getManager() {
+    private StickerJointManager getManager() {
         if (this.level == null || this.level.isClientSide) return null;
         if (this.manager == null) {
             final ServerLevel serverLevel = (ServerLevel) this.level;
-            this.manager = new StickerConstraintManager(serverLevel, VSGameUtilsKt.getShipManagingPos(serverLevel, this.worldPosition), worldPosition, this::getFacing, VSGameUtilsKt.getShipObjectWorld(serverLevel));
+            this.manager = new StickerJointManager(serverLevel, VSGameUtilsKt.getShipManagingPos(serverLevel, this.worldPosition), worldPosition, this::getFacing, VSGameUtilsKt.getShipObjectWorld(serverLevel));
         }
         return this.manager;
     }

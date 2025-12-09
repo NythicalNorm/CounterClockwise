@@ -1,11 +1,11 @@
 package com.blockninja.counterclockwise.create.sticker
 
-import com.blockninja.counterclockwise.ships.ConstraintGroup
+import com.blockninja.counterclockwise.ships.JointGroup
 import net.minecraft.core.BlockPos
 import net.minecraft.nbt.CompoundTag
 import org.valkyrienskies.core.internal.joints.VSJointId
 
-open class StickerConstraintGroup(override val constraintIds: Iterable<VSJointId>, open val blockPos: BlockPos) : ConstraintGroup(constraintIds) {
+open class StickerJointGroup(override val jointIds: Iterable<VSJointId>, open val blockPos: BlockPos) : JointGroup(jointIds) {
     override val compoundTag : CompoundTag
         get() {
             val tag = super.compoundTag
@@ -15,8 +15,8 @@ open class StickerConstraintGroup(override val constraintIds: Iterable<VSJointId
 
     companion object {
         @JvmStatic
-        fun createFromTag(tag: CompoundTag): StickerConstraintGroup {
-            return StickerConstraintGroup(getConstraintsFromTag(tag), BlockPos.of(tag.getLong("blockPos")))
+        fun createFromTag(tag: CompoundTag): StickerJointGroup {
+            return StickerJointGroup(getConstraintsFromTag(tag), BlockPos.of(tag.getLong("blockPos")))
         }
     }
 }

@@ -30,13 +30,14 @@ class CounterClockwise {
         mapper.registerModule(module);*/
         // endregion
 
-        vsApi.collisionPersistEvent.on(EventConsumer { collisionEvent: CollisionEvent, registeredListener: RegisteredListener ->
+        vsApi.collisionPersistEvent.on { collisionEvent: CollisionEvent, registeredListener: RegisteredListener ->
             VSEvents.collide(
                 collisionEvent,
                 registeredListener
             )
-        })
+        }
 
+        // Waiting on https://github.com/ValkyrienSkies/Valkyrien-Skies-2/pull/1453 to finish
         vsApi.registerBlockStateEvent.on((Consumer { registerBlockStateEvent: RegisterBlockStateEvent -> }))
 
         val registration = vsApi

@@ -1,8 +1,8 @@
 package com.blockninja.counterclockwise.create.sticker
 
 import com.blockninja.counterclockwise.centerJOMLD
-import com.blockninja.counterclockwise.ships.ConstraintGroup
-import com.blockninja.counterclockwise.ships.ConstraintManager
+import com.blockninja.counterclockwise.ships.JointGroup
+import com.blockninja.counterclockwise.ships.JointManager
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -43,16 +43,15 @@ import org.valkyrienskies.mod.common.util.toJOML
 import org.valkyrienskies.mod.util.logger
 import thedarkcolour.kotlinforforge.forge.vectorutil.v3d.toVector3d
 import java.util.function.Consumer
-import kotlin.text.get
 
-open class StickerConstraintManager(val level: ServerLevel, val ship: ServerShip?, val blockPos: BlockPos, val getFacing: () -> Direction, override val core: VsiServerShipWorld = level.shipObjectWorld) : ConstraintManager(level.dimensionId, core) {
+open class StickerJointManager(val level: ServerLevel, val ship: ServerShip?, val blockPos: BlockPos, val getFacing: () -> Direction, override val core: VsiServerShipWorld = level.shipObjectWorld) : JointManager(level.dimensionId, core) {
     open val bodyId: ShipId?
         get() = this.ship?.id ?: core.dimensionToGroundBodyIdImmutable[level.dimensionId]
     open val checkPos: Vector3dc
         get() = this.blockPos.centerJOMLD().add(getFacing().normal.toVector3d().mul(0.5625))
 
     @OptIn(PhysTickOnly::class)
-    open fun createStickerConstraint() {
+    open fun createStickerJoint() {
         if (this.bodyId == null) return
         val checkPos = this.level.toWorldCoordinates(Vector3d(this.checkPos))
         var shouldPlaySound = false
@@ -96,10 +95,10 @@ open class StickerConstraintManager(val level: ServerLevel, val ship: ServerShip
 
             val fixedJoint = VSFixedJoint(bodyId!!, jointPos0, otherId, jointPos1, maxJointForce)
 
-            this.addConstraintGroup(
-                StickerConstraintGroup(
+            this.addJointGroup(
+                StickerJointGroup(
                     listOf(
-                        fixedJoint.createConstraint().get() ?: return@transformFromWorldToNearbyLoadedShipsAndWorld
+                        fixedJoint.createJoint().get() ?: return@transformFromWorldToNearbyLoadedShipsAndWorld
                     ), pos.toBlockPos()
                 )
             )
@@ -111,29 +110,29 @@ open class StickerConstraintManager(val level: ServerLevel, val ship: ServerShip
         }
     }
 
-    override fun onRemoveAllConstraintGroups(map: Int2ObjectOpenHashMap<ConstraintGroup>) {
+    override fun onRemoveAllJointGroups(map: Int2ObjectOpenHashMap<JointGroup>) {
         if (map.size > 0) {
             // TODO: re-add this networking stuff
             //StickerSoundPacketS2CPacket(blockPos, false).sendToPlayers(level.players())
         }
     }
 
-    open fun checkStickerConstraint() {
-        this.constraintGroups.forEach { (id, group) ->
-            group as StickerConstraintGroup
+    open fun checkStickerJoint() {
+        this.jointGroups.forEach { (id, group) ->
+            group as StickerJointGroup
             val blockPos = group.blockPos
             if (this.level.isTickingChunk(ChunkPos(blockPos)) && isAirOrFluid(this.level.getBlockState(blockPos)) || this.level.squaredDistanceBetweenInclShips(this.blockPos, blockPos) >= 128.0) {
-                this.removeConstraintGroup(id)
+                this.removeJointGroup(id)
             }
         }
     }
 
-    override fun getCompoundTag(group: ConstraintGroup): CompoundTag {
-        return (group as StickerConstraintGroup).compoundTag
+    override fun getCompoundTag(group: JointGroup): CompoundTag {
+        return (group as StickerJointGroup).compoundTag
     }
 
-    override fun createFormCompoundTag(tag: CompoundTag): ConstraintGroup {
-        return StickerConstraintGroup.createFromTag(tag)
+    override fun createFormCompoundTag(tag: CompoundTag): JointGroup {
+        return StickerJointGroup.createFromTag(tag)
     }
 
     companion object {
