@@ -77,12 +77,14 @@ open class StickerJointManager(val level: ServerLevel, val ship: ServerShip?, va
             val localPos1 : Vector3dc?
             when {
                 this.ship == null -> {
-                    localPos0 = otherShip!!.transform.positionInWorld
+                    // For some reason, positionInWorld is offset 0.5 from positionInShip. Probably a VS bug, but this fixes it for now
+                    localPos0 = otherShip!!.transform.positionInWorld.add(0.5, 0.5, 0.5, Vector3d())
                     localPos1 = otherShip.transform.positionInShip
                 }
                 otherShip == null -> {
                     localPos0 = this.ship.transform.positionInShip
-                    localPos1 = this.ship.transform.positionInWorld
+                    // For some reason, positionInWorld is offset 0.5 from positionInShip. Probably a VS bug, but this fixes it for now
+                    localPos1 = this.ship.transform.positionInWorld.add(0.5, 0.5, 0.5, Vector3d())
                 }
                 else -> {
                     localPos0 = this.ship.transform.worldToShip.transformPosition(otherShip.transform.positionInWorld, Vector3d())!!
