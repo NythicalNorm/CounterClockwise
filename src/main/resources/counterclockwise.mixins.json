@@ -10,7 +10,8 @@
     "create.psi.MixinPortableFluidInterfaceBlockEntity",
     "create.psi.MixinPortableItemInterfaceBlockEntity",
     "create.psi.MixinPortableStorageInterfaceBlockEntity",
-    "create.psi.MixinPortableStorageInterfaceMovement"
+    "create.psi.MixinPortableStorageInterfaceMovement",
+    "create.sticker.MixinStickerBlockEntity"
   ],
   "client": [
   ],
