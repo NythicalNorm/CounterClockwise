@@ -1,9 +1,9 @@
 package com.blockninja.counterclockwise.mixin.create.psi;
 
 import com.blockninja.counterclockwise.mixinducks.create.portable_interface.IPSIWithShipBehavior;
-import com.blockninja.counterclockwise.psi.PSIWithShip;
-import com.blockninja.counterclockwise.psi.PortableFluidInterfaceWithShipController;
-import com.blockninja.counterclockwise.psi.PortableItemInterfaceWithShipController;
+import com.blockninja.counterclockwise.create.psi.PSIWithShip;
+import com.blockninja.counterclockwise.create.psi.PortableFluidInterfaceWithShipController;
+import com.blockninja.counterclockwise.create.psi.PortableItemInterfaceWithShipController;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.simibubi.create.content.contraptions.DirectionalExtenderScrollOptionSlot;
@@ -16,7 +16,6 @@ import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.utility.CreateLang;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;

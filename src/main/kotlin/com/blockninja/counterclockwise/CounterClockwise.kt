@@ -1,7 +1,9 @@
 package com.blockninja.counterclockwise
 
 import com.blockninja.counterclockwise.ships.BeltStorageForceInducer
+import net.minecraft.core.BlockPos
 import net.minecraftforge.fml.common.Mod
+import org.joml.Vector3d
 import org.valkyrienskies.core.api.VsBeta
 import org.valkyrienskies.core.api.event.EventConsumer
 import org.valkyrienskies.core.api.event.RegisteredListener
@@ -10,6 +12,7 @@ import org.valkyrienskies.core.api.events.ShipLoadEvent
 import org.valkyrienskies.core.api.util.GameTickOnly
 import org.valkyrienskies.core.api.util.PhysTickOnly
 import org.valkyrienskies.mod.api.events.RegisterBlockStateEvent
+import org.valkyrienskies.mod.api.toJOML
 import java.util.function.Consumer
 
 @OptIn(PhysTickOnly::class, VsBeta::class, GameTickOnly::class)
@@ -50,4 +53,8 @@ class CounterClockwise {
     companion object {
         const val MOD_ID: String = "counterclockwise"
     }
+}
+
+fun BlockPos.centerJOMLD(): Vector3d {
+    return this.center.toJOML()
 }

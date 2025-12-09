@@ -1,4 +1,4 @@
-package com.blockninja.counterclockwise.psi
+package com.blockninja.counterclockwise.create.psi
 
 import com.blockninja.counterclockwise.mixinducks.create.portable_interface.IPSIWithShipBehavior
 import com.simibubi.create.content.contraptions.actors.psi.PortableFluidInterfaceBlockEntity

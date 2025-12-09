@@ -1,8 +1,8 @@
 package com.blockninja.counterclockwise.mixin.create.psi;
 
 import com.blockninja.counterclockwise.mixinducks.create.portable_interface.IPSIWithShipBehavior;
-import com.blockninja.counterclockwise.psi.PSIWithShip;
-import com.blockninja.counterclockwise.psi.PortableItemInterfaceWithShipController;
+import com.blockninja.counterclockwise.create.psi.PSIWithShip;
+import com.blockninja.counterclockwise.create.psi.PortableItemInterfaceWithShipController;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.simibubi.create.content.contraptions.actors.psi.PortableItemInterfaceBlockEntity;
 import com.simibubi.create.content.contraptions.actors.psi.PortableStorageInterfaceBlockEntity;

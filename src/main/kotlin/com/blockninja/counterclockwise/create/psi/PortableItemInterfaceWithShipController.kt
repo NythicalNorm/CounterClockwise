@@ -1,4 +1,4 @@
-package com.blockninja.counterclockwise.psi
+package com.blockninja.counterclockwise.create.psi
 
 import com.blockninja.counterclockwise.mixinducks.create.portable_interface.IPSIWithShipBehavior
 import com.simibubi.create.content.contraptions.actors.psi.PortableItemInterfaceBlockEntity
@@ -34,10 +34,12 @@ open class PortableItemInterfaceWithShipController(be: PortableItemInterfaceBloc
             val capability = this.capability
             if (capability != null && level != null) {
                 val center = getConnectionCenter()
-                val storage = capability.resolve().get()
-                for (i in 0 until  storage.slots) {
-                    val entity = ItemEntity(level, center.x, center.y, center.z, storage.getStackInSlot(i))
-                    level.addFreshEntity(entity)
+                val storage = capability.resolve()
+                if (storage.isPresent) {
+                    for (i in 0 until  storage.get().slots) {
+                        val entity = ItemEntity(level, center.x, center.y, center.z, storage.get().getStackInSlot(i))
+                        level.addFreshEntity(entity)
+                    }
                 }
             }
             var oldCap = capability

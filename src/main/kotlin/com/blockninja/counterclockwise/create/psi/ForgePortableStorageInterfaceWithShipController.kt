@@ -1,4 +1,4 @@
-package com.blockninja.counterclockwise.psi
+package com.blockninja.counterclockwise.create.psi
 
 import com.simibubi.create.content.contraptions.actors.psi.PortableStorageInterfaceBlockEntity
 

@@ -1,7 +1,7 @@
 package com.blockninja.counterclockwise.mixinducks.create.portable_interface;
 
 import com.blockninja.counterclockwise.CounterClockwise;
-import com.blockninja.counterclockwise.psi.PSIWithShip;
+import com.blockninja.counterclockwise.create.psi.PSIWithShip;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.INamedIconOptions;
 import com.simibubi.create.foundation.blockEntity.behaviour.scrollValue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.gui.AllIcons;

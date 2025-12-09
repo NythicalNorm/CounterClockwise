@@ -1,5 +1,6 @@
-package com.blockninja.counterclockwise.psi
+package com.blockninja.counterclockwise.create.psi
 
+import com.blockninja.counterclockwise.centerJOMLD
 import com.blockninja.counterclockwise.mixinducks.create.portable_interface.IPSIWithShipBehavior
 import com.simibubi.create.content.contraptions.actors.psi.PortableStorageInterfaceBlock
 import com.simibubi.create.content.contraptions.actors.psi.PortableStorageInterfaceBlockEntity
@@ -207,8 +208,4 @@ open class PSIWithShip(open val be: PortableStorageInterfaceBlockEntity) {
         }
     }
     
-}
-
-private fun BlockPos.centerJOMLD(): Vector3d {
-    return this.center.toJOML()
 }
