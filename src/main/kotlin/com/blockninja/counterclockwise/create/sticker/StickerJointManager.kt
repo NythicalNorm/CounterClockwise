@@ -43,16 +43,16 @@ import org.valkyrienskies.mod.common.squaredDistanceBetweenInclShips
 import org.valkyrienskies.mod.common.toWorldCoordinates
 import org.valkyrienskies.mod.common.util.DimensionIdProvider
 import org.valkyrienskies.mod.common.util.toJOML
+import org.valkyrienskies.mod.common.util.toJOMLD
 import org.valkyrienskies.mod.common.util.toMinecraft
 import org.valkyrienskies.mod.util.logger
-import thedarkcolour.kotlinforforge.forge.vectorutil.v3d.toVector3d
 import java.util.function.Consumer
 
 open class StickerJointManager(val level: ServerLevel, val ship: ServerShip?, val blockPos: BlockPos, val getFacing: () -> Direction, override val core: VsiServerShipWorld = level.shipObjectWorld) : JointManager(level.dimensionId, core) {
     open val bodyId: ShipId?
         get() = this.ship?.id ?: core.dimensionToGroundBodyIdImmutable[level.dimensionId]
     open val checkPos: Vector3dc
-        get() = this.blockPos.centerJOMLD().add(getFacing().normal.toVector3d().mul(0.5625))
+        get() = this.blockPos.centerJOMLD().add(getFacing().normal.toJOMLD().mul(0.5625))
 
     @OptIn(PhysTickOnly::class, GameTickOnly::class)
     open fun createStickerJoint() {
@@ -77,14 +77,12 @@ open class StickerJointManager(val level: ServerLevel, val ship: ServerShip?, va
             val localPos1 : Vector3dc?
             when {
                 this.ship == null -> {
-                    // For some reason, positionInWorld is offset 0.5 from positionInShip. Probably a VS bug, but this fixes it for now
-                    localPos0 = otherShip!!.transform.positionInWorld.add(0.5, 0.5, 0.5, Vector3d())
+                    localPos0 = otherShip!!.transform.positionInWorld
                     localPos1 = otherShip.transform.positionInShip
                 }
                 otherShip == null -> {
                     localPos0 = this.ship.transform.positionInShip
-                    // For some reason, positionInWorld is offset 0.5 from positionInShip. Probably a VS bug, but this fixes it for now
-                    localPos1 = this.ship.transform.positionInWorld.add(0.5, 0.5, 0.5, Vector3d())
+                    localPos1 = this.ship.transform.positionInWorld
                 }
                 else -> {
                     localPos0 = this.ship.transform.worldToShip.transformPosition(otherShip.transform.positionInWorld, Vector3d())!!
@@ -92,14 +90,14 @@ open class StickerJointManager(val level: ServerLevel, val ship: ServerShip?, va
                 }
             }
 
-            val compliance = 1e-10f//VSAdditionConfig.SERVER.create.stickerCompliance
+            val compliance = 1.0e-10//VSAdditionConfig.SERVER.create.stickerCompliance
             val maxForce = 1e10f//VSAdditionConfig.SERVER.create.stickerMaxForce
 
             val jointPos0 = VSJointPose(localPos0, (ship?.transform?.shipToWorldRotation ?: Quaterniond()).invert(Quaterniond()))
             val jointPos1 = VSJointPose(localPos1, (otherShip?.transform?.shipToWorldRotation ?: Quaterniond()).invert(Quaterniond()))
             val maxJointForce = VSJointMaxForceTorque(maxForce, maxForce)
 
-            val fixedJoint = VSFixedJoint(bodyId!!, jointPos0, otherId, jointPos1, maxJointForce)
+            val fixedJoint = VSFixedJoint(bodyId!!, jointPos0, otherId, jointPos1, null, compliance)
 
             this.addJointGroup(
                 StickerJointGroup(
