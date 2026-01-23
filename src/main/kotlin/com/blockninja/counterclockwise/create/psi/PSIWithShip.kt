@@ -20,7 +20,7 @@ import org.valkyrienskies.core.util.toAABBi
 import org.valkyrienskies.mod.common.getShipManagingPos
 import org.valkyrienskies.mod.common.getShipsIntersecting
 import org.valkyrienskies.mod.common.transformAabbToWorld
-import thedarkcolour.kotlinforforge.forge.vectorutil.v3d.toVector3d
+import org.valkyrienskies.mod.common.util.toJOMLD
 import kotlin.math.pow
 
 open class PSIWithShip(open val be: PortableStorageInterfaceBlockEntity) {
@@ -92,6 +92,10 @@ open class PSIWithShip(open val be: PortableStorageInterfaceBlockEntity) {
                 stopTransferring()
             }
         }
+
+        if (getExtensionDistance(0.0f) > 0.5f) {
+            stopTransferring()
+        }
     }
 
     open fun getExtensionDistance(partialTicks: Float) : Float {
@@ -143,7 +147,7 @@ open class PSIWithShip(open val be: PortableStorageInterfaceBlockEntity) {
 
         val center = blockPos.centerJOMLD()
         val aabb = AABBd(1.5, 1.5, 1.5, -1.5, -1.5, -1.5)
-        aabb.translate(blockState.getValue(PortableStorageInterfaceBlock.FACING).normal.toVector3d().mul(2.0).add(center))
+        aabb.translate(blockState.getValue(PortableStorageInterfaceBlock.FACING).normal.toJOMLD().mul(2.0).add(center))
 
         val worldAabb = level.transformAabbToWorld(AABBd(aabb))
         val matrices = level.getShipsIntersecting(worldAabb).filterNot { it == ship }.map { it.transform.worldToShip }
