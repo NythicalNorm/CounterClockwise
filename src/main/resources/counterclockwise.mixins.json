@@ -9,6 +9,9 @@
     "create.belt_tracks.MixinBeltBlockEntity",
     "create.fan.MixinEncasedFanBlock",
     "create.fan.MixinEncasedFanBlockEntity",
+    "create.mechanical_arm.ArmBlockEntityMixinAccessor",
+    "create.mechanical_arm.MixinArmBlockEntity",
+    "create.mechanical_arm.MixinArmInteractionPoint",
     "create.psi.MixinPortableFluidInterfaceBlockEntity",
     "create.psi.MixinPortableItemInterfaceBlockEntity",
     "create.psi.MixinPortableStorageInterfaceBlockEntity",
@@ -16,6 +19,8 @@
     "create.sticker.MixinStickerBlockEntity"
   ],
   "client": [
+    "create.mechanical_arm.client.MixinArmInteractionPoint",
+    "create.mechanical_arm.client.MixinArmInteractionPointHandler"
   ],
   "injectors": {
     "defaultRequire": 1
